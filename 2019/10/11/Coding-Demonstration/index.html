@@ -1,0 +1,953 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Coding-Demonstration</title><link rel="stylesheet" href="css/normalize.css"><link rel="stylesheet" href="/css/hexo-theme-adoubi.css"><link rel="icon" href="/images/favicon.ico"><meta name="generator" content="Hexo 4.0.0"></head><body><div class="header"><a class="github-link"><img class="github-image" src="/images/Aquicon-Github-small.png"></a><a class="email-link" href="mailto:null" target="_blank" rel="noopener"><img class="email-image" src="/images/email-small.png"></a><a class="subscribe-link" href="/atom.xml"><img class="subscribe-image" src="/images/subscribe-small.png"></a></div><div class="content"><div class="post-item"></div><h2 class="post-title-wrapper"><p class="post-title">Coding-Demonstration</p></h2><div class="post-date"><time datetime="2019-10-11T08:27:06.000Z">2019-10-11</time></div><div class="post-content"><h1 id="Home-Credit"><a href="#Home-Credit" class="headerlink" title="Home Credit"></a>Home Credit</h1><h2 id="Description"><a href="#Description" class="headerlink" title="Description"></a>Description</h2><p>Many people struggle to get loans due to insufficient or non-existent credit histories. And, unfortunately, this population is often taken advantage of by untrustworthy lenders.</p>
+<p>Home Credit strives to broaden financial inclusion for the unbanked population by providing a positive and safe borrowing experience. In order to make sure this underserved population has a positive loan experience, Home Credit makes use of a variety of alternative data–including telco and transactional information–to predict their clients’ repayment abilities.</p>
+<p>While Home Credit is currently using various statistical and machine learning methods to make these predictions, they’re challenging Kagglers to help them unlock the full potential of their data. Doing so will ensure that clients capable of repayment are not rejected and that loans are given with a principal, maturity, and repayment calendar that will empower their clients to be successful.</p>
+<h2 id="Dataset"><a href="#Dataset" class="headerlink" title="Dataset"></a>Dataset</h2><h3 id="application-train-test-csv"><a href="#application-train-test-csv" class="headerlink" title="application_{train|test}.csv"></a>application_{train|test}.csv</h3><p>This is the main table, broken into two files for Train (with TARGET) and Test (without TARGET).<br>Static data for all applications. One row represents one loan in our data sample.</p>
+<table>
+<thead>
+<tr>
+<th align="left"><strong>Row</strong></th>
+<th align="left"><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">SK_ID_CURR</td>
+<td align="left">ID of loan in our sample</td>
+</tr>
+<tr>
+<td align="left">TARGET</td>
+<td align="left">Target variable (1 - client with payment difficulties: he/she had late payment more than X days on at least one of the first Y installments of the loan in our sample, 0 - all other cases)</td>
+</tr>
+<tr>
+<td align="left">NAME_CONTRACT_TYPE</td>
+<td align="left">Identification if loan is cash or revolving</td>
+</tr>
+<tr>
+<td align="left">CODE_GENDER</td>
+<td align="left">Gender of the client</td>
+</tr>
+<tr>
+<td align="left">FLAG_OWN_CAR</td>
+<td align="left">Flag if the client owns a car</td>
+</tr>
+<tr>
+<td align="left">FLAG_OWN_REALTY</td>
+<td align="left">Flag if client owns a house or flat</td>
+</tr>
+<tr>
+<td align="left">CNT_CHILDREN</td>
+<td align="left">Number of children the client has</td>
+</tr>
+<tr>
+<td align="left">AMT_INCOME_TOTAL</td>
+<td align="left">Income of the client</td>
+</tr>
+<tr>
+<td align="left">AMT_CREDIT</td>
+<td align="left">Credit amount of the loan</td>
+</tr>
+<tr>
+<td align="left">AMT_ANNUITY</td>
+<td align="left">Loan annuity</td>
+</tr>
+<tr>
+<td align="left">AMT_GOODS_PRICE</td>
+<td align="left">For consumer loans it is the price of the goods for which the loan is given</td>
+</tr>
+<tr>
+<td align="left">NAME_TYPE_SUITE</td>
+<td align="left">Who was accompanying client when he was applying for the loan</td>
+</tr>
+<tr>
+<td align="left">NAME_INCOME_TYPE</td>
+<td align="left">Clients income type (businessman, working, maternity leave,…)</td>
+</tr>
+<tr>
+<td align="left">NAME_EDUCATION_TYPE</td>
+<td align="left">Level of highest education the client achieved</td>
+</tr>
+<tr>
+<td align="left">NAME_FAMILY_STATUS</td>
+<td align="left">Family status of the client</td>
+</tr>
+<tr>
+<td align="left">NAME_HOUSING_TYPE</td>
+<td align="left">What is the housing situation of the client (renting, living with parents, …)</td>
+</tr>
+<tr>
+<td align="left">REGION_POPULATION_RELATIVE</td>
+<td align="left">Normalized population of region where client lives (higher number means the client lives in more populated region)</td>
+</tr>
+<tr>
+<td align="left">DAYS_BIRTH</td>
+<td align="left">Client’s age in days at the time of application</td>
+</tr>
+<tr>
+<td align="left">DAYS_EMPLOYED</td>
+<td align="left">How many days before the application the person started current employment</td>
+</tr>
+<tr>
+<td align="left">DAYS_REGISTRATION</td>
+<td align="left">How many days before the application did client change his registration</td>
+</tr>
+<tr>
+<td align="left">DAYS_ID_PUBLISH</td>
+<td align="left">How many days before the application did client change the identity document with which he applied for the loan</td>
+</tr>
+<tr>
+<td align="left">OWN_CAR_AGE</td>
+<td align="left">Age of client’s car</td>
+</tr>
+<tr>
+<td align="left">FLAG_MOBIL</td>
+<td align="left">Did client provide mobile phone (1=YES, 0=NO)</td>
+</tr>
+<tr>
+<td align="left">FLAG_EMP_PHONE</td>
+<td align="left">Did client provide work phone (1=YES, 0=NO)</td>
+</tr>
+<tr>
+<td align="left">FLAG_WORK_PHONE</td>
+<td align="left">Did client provide home phone (1=YES, 0=NO)</td>
+</tr>
+<tr>
+<td align="left">FLAG_CONT_MOBILE</td>
+<td align="left">Was mobile phone reachable (1=YES, 0=NO)</td>
+</tr>
+<tr>
+<td align="left">FLAG_PHONE</td>
+<td align="left">Did client provide home phone (1=YES, 0=NO)</td>
+</tr>
+<tr>
+<td align="left">FLAG_EMAIL</td>
+<td align="left">Did client provide email (1=YES, 0=NO)</td>
+</tr>
+<tr>
+<td align="left">OCCUPATION_TYPE</td>
+<td align="left">What kind of occupation does the client have</td>
+</tr>
+<tr>
+<td align="left">CNT_FAM_MEMBERS</td>
+<td align="left">How many family members does client have</td>
+</tr>
+<tr>
+<td align="left">REGION_RATING_CLIENT</td>
+<td align="left">Our rating of the region where client lives (1,2,3)</td>
+</tr>
+<tr>
+<td align="left">REGION_RATING_CLIENT_W_CITY</td>
+<td align="left">Our rating of the region where client lives with taking city into account (1,2,3)</td>
+</tr>
+<tr>
+<td align="left">WEEKDAY_APPR_PROCESS_START</td>
+<td align="left">On which day of the week did the client apply for the loan</td>
+</tr>
+<tr>
+<td align="left">HOUR_APPR_PROCESS_START</td>
+<td align="left">Approximately at what hour did the client apply for the loan</td>
+</tr>
+<tr>
+<td align="left">REG_REGION_NOT_LIVE_REGION</td>
+<td align="left">Flag if client’s permanent address does not match contact address (1=different, 0=same, at region level)</td>
+</tr>
+<tr>
+<td align="left">REG_REGION_NOT_WORK_REGION</td>
+<td align="left">Flag if client’s permanent address does not match work address (1=different, 0=same, at region level)</td>
+</tr>
+<tr>
+<td align="left">LIVE_REGION_NOT_WORK_REGION</td>
+<td align="left">Flag if client’s contact address does not match work address (1=different, 0=same, at region level)</td>
+</tr>
+<tr>
+<td align="left">REG_CITY_NOT_LIVE_CITY</td>
+<td align="left">Flag if client’s permanent address does not match contact address (1=different, 0=same, at city level)</td>
+</tr>
+<tr>
+<td align="left">REG_CITY_NOT_WORK_CITY</td>
+<td align="left">Flag if client’s permanent address does not match work address (1=different, 0=same, at city level)</td>
+</tr>
+<tr>
+<td align="left">LIVE_CITY_NOT_WORK_CITY</td>
+<td align="left">Flag if client’s contact address does not match work address (1=different, 0=same, at city level)</td>
+</tr>
+<tr>
+<td align="left">ORGANIZATION_TYPE</td>
+<td align="left">Type of organization where client works</td>
+</tr>
+<tr>
+<td align="left">EXT_SOURCE_1</td>
+<td align="left">Normalized score from external data source</td>
+</tr>
+<tr>
+<td align="left">EXT_SOURCE_2</td>
+<td align="left">Normalized score from external data source</td>
+</tr>
+<tr>
+<td align="left">EXT_SOURCE_3</td>
+<td align="left">Normalized score from external data source</td>
+</tr>
+<tr>
+<td align="left">APARTMENTS_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">BASEMENTAREA_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">YEARS_BEGINEXPLUATATION_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">YEARS_BUILD_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">COMMONAREA_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">ELEVATORS_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">ENTRANCES_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">FLOORSMAX_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">FLOORSMIN_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LANDAREA_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LIVINGAPARTMENTS_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LIVINGAREA_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">NONLIVINGAPARTMENTS_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">NONLIVINGAREA_AVG</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">APARTMENTS_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">BASEMENTAREA_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">YEARS_BEGINEXPLUATATION_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">YEARS_BUILD_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">COMMONAREA_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">ELEVATORS_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">ENTRANCES_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">FLOORSMAX_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">FLOORSMIN_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LANDAREA_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LIVINGAPARTMENTS_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LIVINGAREA_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">NONLIVINGAPARTMENTS_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">NONLIVINGAREA_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">APARTMENTS_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">BASEMENTAREA_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">YEARS_BEGINEXPLUATATION_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">YEARS_BUILD_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">COMMONAREA_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">ELEVATORS_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">ENTRANCES_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">FLOORSMAX_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">FLOORSMIN_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LANDAREA_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LIVINGAPARTMENTS_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">LIVINGAREA_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">NONLIVINGAPARTMENTS_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">NONLIVINGAREA_MEDI</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">FONDKAPREMONT_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">HOUSETYPE_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">TOTALAREA_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">WALLSMATERIAL_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">EMERGENCYSTATE_MODE</td>
+<td align="left">Normalized information about building where the client lives, What is average (_AVG suffix), modus (_MODE suffix), median (_MEDI suffix) apartment size, common area, living area, age of building, number of elevators, number of entrances, state of the building, number of floor</td>
+</tr>
+<tr>
+<td align="left">OBS_30_CNT_SOCIAL_CIRCLE</td>
+<td align="left">How many observation of client’s social surroundings with observable 30 DPD (days past due) default</td>
+</tr>
+<tr>
+<td align="left">DEF_30_CNT_SOCIAL_CIRCLE</td>
+<td align="left">How many observation of client’s social surroundings defaulted on 30 DPD (days past due)</td>
+</tr>
+<tr>
+<td align="left">OBS_60_CNT_SOCIAL_CIRCLE</td>
+<td align="left">How many observation of client’s social surroundings with observable 60 DPD (days past due) default</td>
+</tr>
+<tr>
+<td align="left">DEF_60_CNT_SOCIAL_CIRCLE</td>
+<td align="left">How many observation of client’s social surroundings defaulted on 60 (days past due) DPD</td>
+</tr>
+<tr>
+<td align="left">DAYS_LAST_PHONE_CHANGE</td>
+<td align="left">How many days before application did client change phone</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_2</td>
+<td align="left">Did client provide document 2</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_3</td>
+<td align="left">Did client provide document 3</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_4</td>
+<td align="left">Did client provide document 4</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_5</td>
+<td align="left">Did client provide document 5</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_6</td>
+<td align="left">Did client provide document 6</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_7</td>
+<td align="left">Did client provide document 7</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_8</td>
+<td align="left">Did client provide document 8</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_9</td>
+<td align="left">Did client provide document 9</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_10</td>
+<td align="left">Did client provide document 10</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_11</td>
+<td align="left">Did client provide document 11</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_12</td>
+<td align="left">Did client provide document 12</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_13</td>
+<td align="left">Did client provide document 13</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_14</td>
+<td align="left">Did client provide document 14</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_15</td>
+<td align="left">Did client provide document 15</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_16</td>
+<td align="left">Did client provide document 16</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_17</td>
+<td align="left">Did client provide document 17</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_18</td>
+<td align="left">Did client provide document 18</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_19</td>
+<td align="left">Did client provide document 19</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_20</td>
+<td align="left">Did client provide document 20</td>
+</tr>
+<tr>
+<td align="left">FLAG_DOCUMENT_21</td>
+<td align="left">Did client provide document 21</td>
+</tr>
+<tr>
+<td align="left">AMT_REQ_CREDIT_BUREAU_HOUR</td>
+<td align="left">Number of enquiries to Credit Bureau about the client one hour before application</td>
+</tr>
+<tr>
+<td align="left">AMT_REQ_CREDIT_BUREAU_DAY</td>
+<td align="left">Number of enquiries to Credit Bureau about the client one day before application (excluding one hour before application)</td>
+</tr>
+<tr>
+<td align="left">AMT_REQ_CREDIT_BUREAU_WEEK</td>
+<td align="left">Number of enquiries to Credit Bureau about the client one week before application (excluding one day before application)</td>
+</tr>
+<tr>
+<td align="left">AMT_REQ_CREDIT_BUREAU_MON</td>
+<td align="left">Number of enquiries to Credit Bureau about the client one month before application (excluding one week before application)</td>
+</tr>
+<tr>
+<td align="left">AMT_REQ_CREDIT_BUREAU_QRT</td>
+<td align="left">Number of enquiries to Credit Bureau about the client 3 month before application (excluding one month before application)</td>
+</tr>
+<tr>
+<td align="left">AMT_REQ_CREDIT_BUREAU_YEAR</td>
+<td align="left">Number of enquiries to Credit Bureau about the client one day year (excluding last 3 months before application)</td>
+</tr>
+</tbody></table>
+<h2 id="Project-model"><a href="#Project-model" class="headerlink" title="Project model"></a>Project model</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># numpy and pandas for data manipulation</span></span><br><span class="line"><span class="comment"># matplotlib and seaborn for plotting</span></span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line"><span class="comment"># File system manangement</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.feature_selection <span class="keyword">import</span> RFECV</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> KFold</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Counter to show whether the data is balanced.</span></span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="comment"># Suppress warnings</span></span><br><span class="line"><span class="keyword">import</span> warnings</span><br><span class="line">warnings.filterwarnings(<span class="string">'ignore'</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Load-data"><a href="#Load-data" class="headerlink" title="Load data"></a>Load data</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">out_df_1000 = pd.read_csv(<span class="string">'./input/application_train.csv'</span>)<span class="comment">#, nrows=10000)  # full data shape: (307511, 122)</span></span><br><span class="line">out_df_1000.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(307511, 122)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">out_df_1000.head()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SK_ID_CURR</th>
+      <th>TARGET</th>
+      <th>NAME_CONTRACT_TYPE</th>
+      <th>CODE_GENDER</th>
+      <th>FLAG_OWN_CAR</th>
+      <th>FLAG_OWN_REALTY</th>
+      <th>CNT_CHILDREN</th>
+      <th>AMT_INCOME_TOTAL</th>
+      <th>AMT_CREDIT</th>
+      <th>AMT_ANNUITY</th>
+      <th>...</th>
+      <th>FLAG_DOCUMENT_18</th>
+      <th>FLAG_DOCUMENT_19</th>
+      <th>FLAG_DOCUMENT_20</th>
+      <th>FLAG_DOCUMENT_21</th>
+      <th>AMT_REQ_CREDIT_BUREAU_HOUR</th>
+      <th>AMT_REQ_CREDIT_BUREAU_DAY</th>
+      <th>AMT_REQ_CREDIT_BUREAU_WEEK</th>
+      <th>AMT_REQ_CREDIT_BUREAU_MON</th>
+      <th>AMT_REQ_CREDIT_BUREAU_QRT</th>
+      <th>AMT_REQ_CREDIT_BUREAU_YEAR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>100002</td>
+      <td>1</td>
+      <td>Cash loans</td>
+      <td>M</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>0</td>
+      <td>202500.0</td>
+      <td>406597.5</td>
+      <td>24700.5</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>100003</td>
+      <td>0</td>
+      <td>Cash loans</td>
+      <td>F</td>
+      <td>N</td>
+      <td>N</td>
+      <td>0</td>
+      <td>270000.0</td>
+      <td>1293502.5</td>
+      <td>35698.5</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>100004</td>
+      <td>0</td>
+      <td>Revolving loans</td>
+      <td>M</td>
+      <td>Y</td>
+      <td>Y</td>
+      <td>0</td>
+      <td>67500.0</td>
+      <td>135000.0</td>
+      <td>6750.0</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>100006</td>
+      <td>0</td>
+      <td>Cash loans</td>
+      <td>F</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>0</td>
+      <td>135000.0</td>
+      <td>312682.5</td>
+      <td>29686.5</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>100007</td>
+      <td>0</td>
+      <td>Cash loans</td>
+      <td>M</td>
+      <td>N</td>
+      <td>Y</td>
+      <td>0</td>
+      <td>121500.0</td>
+      <td>513000.0</td>
+      <td>21865.5</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 122 columns</p>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Counter(out_df_1000.TARGET)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>Counter({1: 24825, 0: 282686})</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(out_df_1000.TARGET)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x20aa797db88&gt;</code></pre><p><img src="/2019/10/11/Coding-Demonstration/1.png" alt="png"></p>
+<h3 id="Data-Balance"><a href="#Data-Balance" class="headerlink" title="Data Balance"></a>Data Balance</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sample_num = int(out_df_1000[out_df_1000.TARGET == <span class="number">1</span>].shape[<span class="number">0</span>]*<span class="number">0.8</span>)</span><br><span class="line">print(sample_num)</span><br><span class="line"></span><br><span class="line">out_df_1000 = pd.concat([out_df_1000[out_df_1000.TARGET == <span class="number">1</span>].sample(</span><br><span class="line">    sample_num), out_df_1000[out_df_1000.TARGET == <span class="number">0</span>].sample(sample_num)], ignore_index=<span class="literal">True</span>).reset_index(drop=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">print(Counter(out_df_1000.TARGET))</span><br><span class="line">sns.countplot(out_df_1000.TARGET)</span><br></pre></td></tr></table></figure>
+
+<pre><code>19860
+Counter({1: 19860, 0: 19860})
+
+
+
+
+
+&lt;matplotlib.axes._subplots.AxesSubplot at 0x20aa8161188&gt;</code></pre><p><img src="/2019/10/11/Coding-Demonstration/2.png" alt="png"></p>
+<h3 id="Remove-bad-features-columns-and-records-row"><a href="#Remove-bad-features-columns-and-records-row" class="headerlink" title="Remove bad features (columns) and records (row)"></a>Remove bad features (columns) and records (row)</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">row_na_rate</span><span class="params">(func_df)</span>:</span></span><br><span class="line">    bad_row = []</span><br><span class="line">    miss_num = []</span><br><span class="line">    <span class="keyword">for</span> each_row <span class="keyword">in</span> func_df.index:</span><br><span class="line">        miss_cnt = func_df.shape[<span class="number">1</span>]-func_df.iloc[each_row].count()</span><br><span class="line">        <span class="keyword">if</span> miss_cnt&gt;<span class="number">40</span>:</span><br><span class="line">            bad_row.append(each_row)</span><br><span class="line">        miss_num.append(miss_cnt)</span><br><span class="line">    <span class="keyword">return</span> bad_row, miss_num</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">col_na_rate</span><span class="params">(func_df)</span>:</span></span><br><span class="line">    bad_col = []</span><br><span class="line">    <span class="keyword">for</span> each_column <span class="keyword">in</span> func_df.columns:</span><br><span class="line">        miss_cnt = func_df.shape[<span class="number">0</span>]-func_df[each_column].count()</span><br><span class="line">        <span class="keyword">if</span> miss_cnt!=<span class="number">0</span>:          </span><br><span class="line">            <span class="keyword">if</span> miss_cnt/func_df.shape[<span class="number">0</span>]&gt;<span class="number">0.4</span>:</span><br><span class="line">                bad_col.append(each_column)</span><br><span class="line">    <span class="keyword">return</span> bad_col</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># get bad columns and rows</span></span><br><span class="line"><span class="comment"># and we do not need ID as a feature for the model</span></span><br><span class="line">remove_cols = col_na_rate(out_df_1000) + [<span class="string">'SK_ID_CURR'</span>]</span><br><span class="line">bad_row,miss_num  = row_na_rate(out_df_1000)</span><br><span class="line"><span class="comment"># plot how many 'na' the rows have.</span></span><br><span class="line">plt.hist(miss_num)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([9373., 2348., 2275., 2350., 1599.,  664.,  517., 8264., 9313.,
+        3017.]),
+ array([ 0. ,  6.1, 12.2, 18.3, 24.4, 30.5, 36.6, 42.7, 48.8, 54.9, 61. ]),
+ &lt;a list of 10 Patch objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/3.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">out_df_1000 = out_df_1000.drop(bad_row,axis=<span class="number">0</span>).reset_index(drop=<span class="literal">True</span>)</span><br><span class="line">print(Counter(out_df_1000.TARGET))</span><br></pre></td></tr></table></figure>
+
+<pre><code>Counter({0: 10188, 1: 8768})</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">useful_col = [i <span class="keyword">for</span> i <span class="keyword">in</span> out_df_1000.columns <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> remove_cols]</span><br><span class="line">train_usecol = out_df_1000[useful_col]</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train_usecol.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(18956, 72)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Counter(train_usecol.FLAG_OWN_REALTY)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>Counter({&apos;Y&apos;: 13241, &apos;N&apos;: 5715})</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.FLAG_OWN_REALTY.dropna())</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x20aa7ac6388&gt;</code></pre><p><img src="/2019/10/11/Coding-Demonstration/4.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.FLAG_OWN_REALTY, hue=train_usecol.TARGET)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x20aa7d738c8&gt;</code></pre><p><img src="/2019/10/11/Coding-Demonstration/5.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.NAME_EDUCATION_TYPE, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4]), &lt;a list of 5 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/6.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">sns.countplot(train_usecol.NAME_INCOME_TYPE, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4, 5]), &lt;a list of 6 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/7.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">income_df = train_usecol</span><br><span class="line">income_series = income_df.groupby(<span class="string">'NAME_EDUCATION_TYPE'</span>).AMT_INCOME_TOTAL.mean()</span><br><span class="line">plt.bar(income_series.index, income_series)</span><br><span class="line">plt.xticks(rotation = <span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>([0, 1, 2, 3, 4], &lt;a list of 5 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/8.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">income_df = train_usecol</span><br><span class="line">income_series = income_df.groupby(<span class="string">'NAME_EDUCATION_TYPE'</span>).AMT_INCOME_TOTAL.mean()</span><br><span class="line">sns.barplot(income_series.index, income_series)</span><br><span class="line">plt.xticks(rotation = <span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4]), &lt;a list of 5 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/9.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.barplot(income_df.NAME_EDUCATION_TYPE,income_df.AMT_INCOME_TOTAL)</span><br><span class="line">plt.xticks(rotation = <span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4]), &lt;a list of 5 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/10.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.NAME_INCOME_TYPE, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4, 5]), &lt;a list of 6 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/11.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.FLAG_OWN_CAR, hue=train_usecol.TARGET)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x20aa8edef88&gt;</code></pre><p><img src="/2019/10/11/Coding-Demonstration/12.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.NAME_FAMILY_STATUS, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4]), &lt;a list of 5 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/13.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.NAME_HOUSING_TYPE, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4, 5]), &lt;a list of 6 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/14.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.OCCUPATION_TYPE, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16,
+        17]), &lt;a list of 18 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/16.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.WEEKDAY_APPR_PROCESS_START, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4, 5, 6]), &lt;a list of 7 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/16.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.CNT_CHILDREN, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0, 1, 2, 3, 4, 5, 6, 7]), &lt;a list of 8 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/17.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(train_usecol.FLAG_MOBIL, hue=train_usecol.TARGET)</span><br><span class="line">plt.xticks(rotation=<span class="number">90</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(array([0]), &lt;a list of 1 Text xticklabel objects&gt;)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/18.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">train_usecol.dtypes[:<span class="number">10</span>]</span><br><span class="line">train_usecol.dtypes[train_usecol.dtypes==<span class="string">'object'</span>].index</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>Index([&apos;NAME_CONTRACT_TYPE&apos;, &apos;CODE_GENDER&apos;, &apos;FLAG_OWN_CAR&apos;, &apos;FLAG_OWN_REALTY&apos;,
+       &apos;NAME_TYPE_SUITE&apos;, &apos;NAME_INCOME_TYPE&apos;, &apos;NAME_EDUCATION_TYPE&apos;,
+       &apos;NAME_FAMILY_STATUS&apos;, &apos;NAME_HOUSING_TYPE&apos;, &apos;OCCUPATION_TYPE&apos;,
+       &apos;WEEKDAY_APPR_PROCESS_START&apos;, &apos;ORGANIZATION_TYPE&apos;],
+      dtype=&apos;object&apos;)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">dummy_col_df</span><span class="params">(column_list, df)</span>:</span></span><br><span class="line">    not_dum_df = df[[i <span class="keyword">for</span> i <span class="keyword">in</span> df.columns <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> column_list]]</span><br><span class="line">    out_dummy_df = [not_dum_df]</span><br><span class="line">    <span class="keyword">for</span> each_column <span class="keyword">in</span> column_list:</span><br><span class="line">        out_dummy_df.append(pd.get_dummies(df[<span class="string">"OCCUPATION_TYPE"</span>],prefix=each_column[:<span class="number">4</span>]))</span><br><span class="line">    <span class="keyword">return</span> pd.concat(out_dummy_df, axis=<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">dummy_list = [<span class="string">'OCCUPATION_TYPE'</span>, <span class="string">"WEEKDAY_APPR_PROCESS_START"</span>, <span class="string">'NAME_TYPE_SUITE'</span>, <span class="string">'NAME_INCOME_TYPE'</span>, <span class="string">'NAME_FAMILY_STATUS'</span>, </span><br><span class="line"><span class="string">'NAME_HOUSING_TYPE'</span>, <span class="string">'ORGANIZATION_TYPE'</span>]</span><br><span class="line"></span><br><span class="line">train_usecol_dummy = dummy_col_df(dummy_list,train_usecol)</span><br><span class="line">after_dummy_col=train_usecol_dummy.columns</span><br><span class="line">   </span><br><span class="line">train_usecol_fill = train_usecol_dummy.fillna(<span class="number">0</span>)</span><br><span class="line">train_usecol_fill.dtypes[train_usecol_fill.dtypes==<span class="string">'object'</span>].index</span><br><span class="line">    </span><br><span class="line"><span class="keyword">for</span> each_obj_col <span class="keyword">in</span> train_usecol_fill.dtypes[train_usecol_fill.dtypes == <span class="string">'object'</span>].index:</span><br><span class="line">    class_mapping = &#123;label: idx <span class="keyword">for</span> idx, label <span class="keyword">in</span> enumerate(sorted(</span><br><span class="line">        [i <span class="keyword">if</span> i != <span class="number">0</span> <span class="keyword">else</span> <span class="string">'0'</span> <span class="keyword">for</span> i <span class="keyword">in</span> list(set(train_usecol_fill[each_obj_col]))]))&#125;</span><br><span class="line">    <span class="keyword">if</span> <span class="string">'0'</span> <span class="keyword">in</span> class_mapping:</span><br><span class="line">        class_mapping[<span class="number">0</span>] = class_mapping[<span class="string">'0'</span>]</span><br><span class="line">    train_usecol_fill[each_obj_col] = train_usecol_fill[each_obj_col].map(class_mapping)</span><br><span class="line">    </span><br><span class="line">train_usecol_fill.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(18956, 191)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train_usecol_fill.dtypes[train_usecol_fill.dtypes==<span class="string">'object'</span>].index</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>Index([], dtype=&apos;object&apos;)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">x = train_usecol_fill[[i <span class="keyword">for</span> i <span class="keyword">in</span> after_dummy_col <span class="keyword">if</span> i != <span class="string">'TARGET'</span>]]</span><br><span class="line">y = train_usecol_fill.TARGET</span><br><span class="line"></span><br><span class="line">x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=<span class="number">0.3</span>, random_state=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">raw_log = LogisticRegression()</span><br><span class="line">raw_log.fit(x_train,y_train)</span><br><span class="line"></span><br><span class="line">print(raw_log.score(x_train,y_train))</span><br><span class="line">print(raw_log.score(x_test,y_test))</span><br></pre></td></tr></table></figure>
+
+<pre><code>0.5804506745044842
+0.5809741515737648</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">test_df = pd.read_csv(<span class="string">'./input/application_test.csv'</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train_usecol_dummy.shape</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>(18956, 191)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">test_usecol = test_df[[i <span class="keyword">for</span> i <span class="keyword">in</span> useful_col <span class="keyword">if</span> i!=<span class="string">'TARGET'</span>]]</span><br><span class="line">test_usecol_dummy = dummy_col_df(dummy_list,test_usecol)</span><br><span class="line">test_usecol_fill = test_usecol_dummy.fillna(<span class="number">0</span>)</span><br><span class="line">test_usecol_fill.dtypes[test_usecol_fill.dtypes==<span class="string">'object'</span>].index</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>Index([&apos;NAME_CONTRACT_TYPE&apos;, &apos;CODE_GENDER&apos;, &apos;FLAG_OWN_CAR&apos;, &apos;FLAG_OWN_REALTY&apos;,
+       &apos;NAME_EDUCATION_TYPE&apos;],
+      dtype=&apos;object&apos;)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> each_obj_col <span class="keyword">in</span> test_usecol_fill.dtypes[test_usecol_fill.dtypes==<span class="string">'object'</span>].index:</span><br><span class="line">    class_mapping = &#123;label: idx <span class="keyword">for</span> idx, label <span class="keyword">in</span> enumerate(sorted(</span><br><span class="line">        [i <span class="keyword">if</span> i != <span class="number">0</span> <span class="keyword">else</span> <span class="string">'0'</span> <span class="keyword">for</span> i <span class="keyword">in</span> list(set(test_usecol_fill[each_obj_col]))])) &#125;</span><br><span class="line">    <span class="keyword">if</span> <span class="string">'0'</span> <span class="keyword">in</span> class_mapping:</span><br><span class="line">        class_mapping[<span class="number">0</span>] = class_mapping[<span class="string">'0'</span>]</span><br><span class="line">    test_usecol_fill[each_obj_col] = test_usecol_fill[each_obj_col].map(class_mapping)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line">model = LogisticRegression()</span><br><span class="line"></span><br><span class="line">pca = PCA(n_components=<span class="number">8</span>)</span><br><span class="line">reduced_x = pca.fit_transform(x)</span><br><span class="line">x_train,x_test,y_train,y_test = train_test_split(reduced_x,y,test_size=<span class="number">0.3</span>,random_state=<span class="number">1</span>)</span><br><span class="line">model.fit(x_train,y_train)</span><br><span class="line">model.score(x_test,y_test)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>0.5797432741339898</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line">clf = SVC()</span><br><span class="line">reduced_x = pca.fit_transform(x)</span><br><span class="line">x_train,x_test,y_train,y_test = train_test_split(reduced_x,y,test_size=<span class="number">0.3</span>,random_state=<span class="number">1</span>)</span><br><span class="line">clf.fit(x_train,y_train)</span><br><span class="line">model.score(x_test,y_test)</span><br><span class="line">print(model.score)</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;bound method ClassifierMixin.score of LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1000, l1_ratio=None, max_iter=100,
+                   multi_class=&apos;warn&apos;, n_jobs=None, penalty=&apos;l2&apos;,
+                   random_state=None, solver=&apos;warn&apos;, tol=0.0001, verbose=0,
+                   warm_start=False)&gt;</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.fit(x_train,y_train)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>LogisticRegression(C=1.0, class_weight=None, dual=False, fit_intercept=True,
+                   intercept_scaling=1, l1_ratio=None, max_iter=100,
+                   multi_class=&apos;warn&apos;, n_jobs=None, penalty=&apos;l2&apos;,
+                   random_state=None, solver=&apos;warn&apos;, tol=0.0001, verbose=0,
+                   warm_start=False)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_n_pca</span><span class="params">(n_col)</span>:</span></span><br><span class="line">    model_score = []</span><br><span class="line">    <span class="keyword">for</span> this_n <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">30</span>):</span><br><span class="line">        model = LogisticRegression()</span><br><span class="line">        pca = PCA(n_components=this_n)</span><br><span class="line">        reduced_x = pca.fit_transform(x)</span><br><span class="line">        x_train,x_test,y_train,y_test = train_test_split(reduced_x,y,test_size=<span class="number">0.3</span>,random_state=<span class="number">1</span>)</span><br><span class="line">        model.fit(x_train,y_train)</span><br><span class="line">        model_score.append(model.score(x_test,y_test))</span><br><span class="line">    <span class="keyword">return</span> model_score</span><br><span class="line"></span><br><span class="line">model_score = get_n_pca(x.shape[<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.grid()</span><br><span class="line">plt.plot(range(<span class="number">1</span>,<span class="number">30</span>),model_score)</span><br><span class="line">print(*list((i+<span class="number">1</span>,j)<span class="keyword">for</span> i,j <span class="keyword">in</span> enumerate(model_score))[:<span class="number">20</span>],sep=<span class="string">'\n'</span>)</span><br><span class="line">print(<span class="string">'----'</span>)</span><br><span class="line">print(*list(zip(range(<span class="number">1</span>,<span class="number">30</span>),model_score))[:<span class="number">20</span>],sep=<span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure>
+
+<pre><code>(1, 0.5319148936170213)
+(2, 0.5291014594689643)
+(3, 0.5577633198522947)
+(4, 0.5649727448566907)
+(5, 0.5625109899771409)
+(6, 0.5746439247406365)
+(7, 0.5755231229119043)
+(8, 0.5797432741339898)
+(9, 0.5843151046245824)
+(10, 0.5846667838930895)
+(11, 0.5839634253560753)
+(12, 0.5846667838930895)
+(13, 0.5848426235273431)
+(14, 0.5841392649903289)
+(15, 0.5846667838930895)
+(16, 0.5841392649903289)
+(17, 0.584490944258836)
+(18, 0.5841392649903289)
+(19, 0.584490944258836)
+(20, 0.5841392649903289)
+----
+(1, 0.5319148936170213)
+(2, 0.5291014594689643)
+(3, 0.5577633198522947)
+(4, 0.5649727448566907)
+(5, 0.5625109899771409)
+(6, 0.5746439247406365)
+(7, 0.5755231229119043)
+(8, 0.5797432741339898)
+(9, 0.5843151046245824)
+(10, 0.5846667838930895)
+(11, 0.5839634253560753)
+(12, 0.5846667838930895)
+(13, 0.5848426235273431)
+(14, 0.5841392649903289)
+(15, 0.5846667838930895)
+(16, 0.5841392649903289)
+(17, 0.584490944258836)
+(18, 0.5841392649903289)
+(19, 0.584490944258836)
+(20, 0.5841392649903289)</code></pre><p><img src="/2019/10/11/Coding-Demonstration/19.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(model_score)</span><br></pre></td></tr></table></figure>
+
+<pre><code>[0.5319148936170213, 0.5291014594689643, 0.5577633198522947, 0.5649727448566907, 0.5625109899771409, 0.5746439247406365, 0.5755231229119043, 0.5797432741339898, 0.5843151046245824, 0.5846667838930895, 0.5839634253560753, 0.5846667838930895, 0.5848426235273431, 0.5841392649903289, 0.5846667838930895, 0.5841392649903289, 0.584490944258836, 0.5841392649903289, 0.584490944258836, 0.5841392649903289, 0.5841392649903289, 0.584490944258836, 0.584490944258836, 0.5846667838930895, 0.5839634253560753, 0.5846667838930895, 0.584490944258836, 0.584490944258836, 0.584490944258836]</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.decomposition <span class="keyword">import</span> PCA</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"></span><br><span class="line">model = LogisticRegression(intercept_scaling=<span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line">pca = PCA(n_components=<span class="number">9</span>)</span><br><span class="line">reduced_x = pca.fit_transform(x)</span><br><span class="line">x_train,x_test,y_train,y_test = train_test_split(reduced_x,y,test_size=<span class="number">0.3</span>,random_state=<span class="number">1</span>)</span><br><span class="line">model.fit(x_train,y_train)</span><br><span class="line">model.score(x_test,y_test)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>0.5881835765781607</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">out_x = test_usecol_fill</span><br><span class="line">reduced_out_x = pca.fit_transform(out_x)</span><br><span class="line">out_y=model.predict_proba(reduced_out_x)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">out_y</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>array([[0.48863366, 0.51136634],
+       [0.51265858, 0.48734142],
+       [0.67984626, 0.32015374],
+       ...,
+       [0.56934672, 0.43065328],
+       [0.56985013, 0.43014987],
+       [0.50325753, 0.49674247]])</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">out_df = pd.DataFrame(</span><br><span class="line">    &#123;<span class="string">'SK_ID_CURR'</span>:test_df.SK_ID_CURR.values, <span class="string">'TARGET'</span> : out_y.tolist&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">out_df.to_csv(<span class="string">'out_df.csv'</span>, index=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+</div></div><div class="footer"><div class="footer-copyright">Theme By <a href="https://github.com/shinux/hexo-theme-adoubi" target="_blank" rel="noopener">Adoubi</a> , Powered By Hexo.</div></div></body></html>
